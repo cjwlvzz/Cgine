@@ -1,0 +1,10 @@
+<ProjectTemplate xmlns="http://schemas.datacontract.org/2004/07/CgineEditor.GameProject"
+          xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+          <ProjectFile>project.Cgine</ProjectFile>
+          <ProjectFolders xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+                    <a:string>.Cgine</a:string>
+                    <a:string>Content</a:string>
+                    <a:string>GameScript</a:string>
+          </ProjectFolders>
+          <ProjectType>First-Person Project</ProjectType>
+</ProjectTemplate>

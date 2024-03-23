@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using CgineEditor.Utils;
+using System.Collections.ObjectModel;
 
 namespace CgineEditor.GameProject
 {
@@ -24,6 +25,12 @@ namespace CgineEditor.GameProject
         //list of folders that would be create for the game project
         public List<string> ProjectFolders { get; set;  }
 
+        public byte[] Icon { get; set; }
+        public byte[] Screenshot { get; set; }
+
+        public string IconFilePath { get; set; }
+        public string ScreenshotFilePath { get; set; }
+        public string ProjectFilePath { get; set; }
 
     }
 
@@ -31,52 +38,68 @@ namespace CgineEditor.GameProject
     {
         // TODO: get the path from the installation location
         private readonly string _templatePath = @"..\..\CgineEditor\ProjectTemplates";
-        private string _name = "NewProject";
-        public string Name
+        private string _projectName = "NewProject";
+        public string ProjectName
         {
-            get => _name;
+            get => _projectName;
             set
             {
-                if (_name != value)
+                if (_projectName != value)
                 {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
+                    _projectName = value;
+                    OnPropertyChanged(nameof(ProjectName));
                 }
             }
         }
 
-        private string _path = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\CgineProject\";
-        public string Path
+        private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\CgineProject\";
+        public string ProjectPath
         {
-            get => _path;
+            get => _projectPath;
             set
             {
-                if (_path != value)
+                if (_projectPath != value)
                 {
-                    _path = value;
+                    _projectPath = value;
                     OnPropertyChanged(nameof(Path));
                 }
             }
         }
 
+      
+        private ObservableCollection<ProjectTemplate> _projectTemplates = new ObservableCollection<ProjectTemplate>();
+        //ReadOnlyObsetvableCollection is for the xml configration to read
+        public ReadOnlyObservableCollection<ProjectTemplate> ProjectTemplates
+        { get ;}
+
         public NewProject()
         {
+            ProjectTemplates = new ReadOnlyObservableCollection<ProjectTemplate>(_projectTemplates);
             try
             {
                 var templateFiles = Directory.GetFiles(_templatePath, "template.xml", SearchOption.AllDirectories);
                 Debug.Assert(templateFiles.Any());
                 foreach (var file in templateFiles)
                 {
-                    var template = new ProjectTemplate()
-                    {
-                        ProjectType = "Empty Project",
-                        ProjectFile = "project.Cgine",
-                        ProjectFolders = new List<string>() {".Cgine","Content","GameScript" }
-                    };
 
-                    Serializer.ToFile(template, file);
+                    var template = Serializer.FromFile<ProjectTemplate>(file);
+                    template.IconFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Icon.png"));
+                    template.Icon = File.ReadAllBytes(template.IconFilePath);
+                    template.ScreenshotFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), "Screenshot.png"));
+                    template.Screenshot = File.ReadAllBytes(template.ScreenshotFilePath);
+                    template.ProjectFilePath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(file), template.ProjectFile));
+                    _projectTemplates.Add(template);
 
-                }
+                    //var template = new ProjectTemplate()
+                    //{
+                        //    ProjectType = "Empty Project",
+                        //    ProjectFile = "project.Cgine",
+                        //    ProjectFolders = new List<string>() {".Cgine","Content","GameScript" }
+                    //};
+
+                //Serializer.ToFile(template, file);
+
+            }
             }
             catch(Exception ex)
             {

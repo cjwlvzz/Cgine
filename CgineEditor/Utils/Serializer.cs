@@ -23,5 +23,22 @@ namespace CgineEditor.Utils
                 // TODO: log error in engine editor
             }
         }
+
+        internal static T FromFile<T>(string path)
+        {
+            try
+            {
+                using var fs = new FileStream(path, FileMode.Open);
+                var serializer = new DataContractSerializer(typeof(T));
+                T instance = (T)serializer.ReadObject(fs);
+                return instance;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                // TODO: log error in engine editor
+                return default(T);
+            }
+        }
     }
 }
