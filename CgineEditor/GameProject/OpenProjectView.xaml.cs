@@ -8,16 +8,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace CgineEditor.GameProject
 {
     /// <summary>
-    /// Interaction logic for ProjectBrowserDialg.xaml
+    /// OpenProjectView.xaml 的交互逻辑
     /// </summary>
-    public partial class ProjectBrowserDialg : Window
+    public partial class OpenProjectView : UserControl
     {
-        public ProjectBrowserDialg()
+        public OpenProjectView()
         {
             InitializeComponent();
         }
