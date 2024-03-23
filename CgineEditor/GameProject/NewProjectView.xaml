@@ -12,7 +12,7 @@
     </UserControl.DataContext>
     <StackPanel Background="White">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <ListBox Width="195" Height="250" ItemsSource="{Binding ProjectTemplates}" x:Name="templateListBox">
+            <ListBox Width="300" Height="250" ItemsSource="{Binding ProjectTemplates}" x:Name="templateListBox">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
