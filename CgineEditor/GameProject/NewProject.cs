@@ -19,11 +19,11 @@ namespace CgineEditor.GameProject
 
         [DataMember]
         //name of the file that is going to be our game project
-        public string ProjectFile { get; set;  }
+        public string ProjectFile { get; set; }
 
         [DataMember]
         //list of folders that would be create for the game project
-        public List<string> ProjectFolders { get; set;  }
+        public List<string> ProjectFolders { get; set; }
 
         public byte[] Icon { get; set; }
         public byte[] Screenshot { get; set; }
@@ -47,6 +47,7 @@ namespace CgineEditor.GameProject
                 if (_projectName != value)
                 {
                     _projectName = value;
+                    ValidateProjectPath();
                     OnPropertyChanged(nameof(ProjectName));
                 }
             }
@@ -61,16 +62,82 @@ namespace CgineEditor.GameProject
                 if (_projectPath != value)
                 {
                     _projectPath = value;
-                    OnPropertyChanged(nameof(Path));
+                    ValidateProjectPath();
+                    OnPropertyChanged(nameof(ProjectPath));
                 }
             }
         }
 
-      
+        private bool _isValid;
+        public bool IsValid
+        {
+            get => _isValid;
+            set
+            {
+                if (_isValid != value)
+                {
+                    _isValid = value;
+                    OnPropertyChanged(nameof(IsValid));
+                }
+            }
+        }
+
+        private string _errorMsg;
+        public string ErrorMsg
+        {
+            get => _errorMsg;
+            set
+            {
+                if (_errorMsg != value)
+                {
+                    _errorMsg = value;
+                    OnPropertyChanged(nameof(ErrorMsg));
+                }
+            }
+        }
+
         private ObservableCollection<ProjectTemplate> _projectTemplates = new ObservableCollection<ProjectTemplate>();
         //ReadOnlyObsetvableCollection is for the xml configration to read
         public ReadOnlyObservableCollection<ProjectTemplate> ProjectTemplates
-        { get ;}
+        { get; }
+
+        private bool ValidateProjectPath()
+        {
+            var path = ProjectPath;
+            if (!Path.EndsInDirectorySeparator(path))
+            {
+                path += @"\";
+            }
+            path += $@"{ProjectName}\";
+            IsValid = false;
+
+            if (string.IsNullOrEmpty(ProjectName.Trim()))
+            {
+                ErrorMsg = "Project name cannot be empty";
+            }
+            else if (ProjectName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+            {
+                ErrorMsg = "Project name contains invalid characters";
+            }
+            else if (string.IsNullOrWhiteSpace(ProjectPath.Trim()))
+            {
+                ErrorMsg = "Please select a valid project folder";
+            }
+            else if (ProjectPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
+                ErrorMsg = "Project path contains invalid characters";
+            }
+            else if (Directory.Exists(path) && Directory.EnumerateFileSystemEntries(path).Any())
+            {
+                ErrorMsg = "Project file must be created in an empty folder";
+            }
+            else
+            {
+                ErrorMsg = string.Empty;
+                IsValid = true;
+            }
+            return IsValid;
+        }
 
         public NewProject()
         {
@@ -92,21 +159,22 @@ namespace CgineEditor.GameProject
 
                     //var template = new ProjectTemplate()
                     //{
-                        //    ProjectType = "Empty Project",
-                        //    ProjectFile = "project.Cgine",
-                        //    ProjectFolders = new List<string>() {".Cgine","Content","GameScript" }
+                    //    ProjectType = "Empty Project",
+                    //    ProjectFile = "project.Cgine",
+                    //    ProjectFolders = new List<string>() {".Cgine","Content","GameScript" }
                     //};
 
-                //Serializer.ToFile(template, file);
+                    //Serializer.ToFile(template, file);
 
+                }
+                ValidateProjectPath();
             }
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
                 //TODO :log error in engine editor
             }
-            }
+        }
 
     }
 
