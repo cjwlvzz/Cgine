@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace CgineEditor.GameProject
 {
-    class Scene :ViewModelBase
+    [DataContract]
+    public class Scene :ViewModelBase
     {
         private string _name;
+        [DataMember]
         public string Name
         {
             get => _name;
@@ -19,5 +23,16 @@ namespace CgineEditor.GameProject
                 }
             }
         }
+
+        [DataMember]
+        public Project Project { get; private set; }
+
+        public Scene(Project project,string name)
+        {
+            Debug.Assert(project != null);
+            Project = project;
+            Name = name;
+        }
+
     }
 }

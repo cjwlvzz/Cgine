@@ -18,6 +18,7 @@ namespace CgineEditor.GameProject
         public string ProjectType { get; set; }
 
         [DataMember]
+
         //name of the file that is going to be our game project
         public string ProjectFile { get; set; }
 
@@ -53,7 +54,7 @@ namespace CgineEditor.GameProject
             }
         }
 
-        private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\CgineProject\";
+        private string _projectPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}\CgineProjects\";
         public string ProjectPath
         {
             get => _projectPath;
@@ -158,12 +159,14 @@ namespace CgineEditor.GameProject
                 ProjectPath += @"\";
             }
 
-            var path = $@"{ProjectPath}{ProjectName}";
+            var path = $@"{ProjectPath}{ProjectName}\";
 
             try
             {
                 if (!Directory.Exists(path))
+                {
                     Directory.CreateDirectory(path);
+                }
 
                 //create project folders for the new project
                 foreach (var folder in template.ProjectFolders)
@@ -174,6 +177,18 @@ namespace CgineEditor.GameProject
                 fileDirInfo.Attributes |= FileAttributes.Hidden;
                 File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(fileDirInfo.FullName, "Icon.png")));
                 File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(fileDirInfo.FullName, "Screenshot.png")));
+
+                var projectXmlConfig = File.ReadAllText(template.ProjectFilePath);
+                /*The code is using the string.Format method to format the string projectXmlConfig. In this case, projectXmlConfig is a string template that may contain placeholders (such as {0}, {1}, etc.),
+                and the string.Format method replaces these placeholders with the arguments provided
+                (in this case, ProjectName and ProjectPath) to generate the final formatted string.*/
+                projectXmlConfig = string.Format(projectXmlConfig, ProjectName, ProjectPath);
+                var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
+                File.WriteAllText(projectPath, projectXmlConfig);
+
+                var project = new Project(ProjectName, path);
+                Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
+
             }
             catch (Exception ex)
             {
