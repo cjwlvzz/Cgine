@@ -139,6 +139,39 @@ namespace CgineEditor.GameProject
             return IsValid;
         }
 
+        /// <summary>
+        ///  return the project fil path created
+        /// </summary>
+        /// <param name="template"></param>
+        /// <returns></returns>
+        public string CreateProject(ProjectTemplate template)
+        {
+            ValidateProjectPath();
+
+            if (!IsValid)
+            {
+                return string.Empty;
+            }
+
+            if (!Path.EndsInDirectorySeparator(ProjectPath))
+            {
+                ProjectPath += @"\";
+            }
+
+            var path = $@"{ProjectPath}{ProjectName}";
+
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return ProjectPath;
+        }
+
         public NewProject()
         {
             ProjectTemplates = new ReadOnlyObservableCollection<ProjectTemplate>(_projectTemplates);
