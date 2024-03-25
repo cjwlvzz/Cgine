@@ -172,7 +172,8 @@ namespace CgineEditor.GameProject
                 }
                 var fileDirInfo = new DirectoryInfo(path + @".Cgine\");
                 fileDirInfo.Attributes |= FileAttributes.Hidden;
-
+                File.Copy(template.IconFilePath, Path.GetFullPath(Path.Combine(fileDirInfo.FullName, "Icon.png")));
+                File.Copy(template.ScreenshotFilePath, Path.GetFullPath(Path.Combine(fileDirInfo.FullName, "Screenshot.png")));
             }
             catch (Exception ex)
             {
