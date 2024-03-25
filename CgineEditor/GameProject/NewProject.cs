@@ -162,11 +162,21 @@ namespace CgineEditor.GameProject
 
             try
             {
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                //create project folders for the new project
+                foreach (var folder in template.ProjectFolders)
+                {
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path), folder)));
+                }
+                var fileDirInfo = new DirectoryInfo(path + @".Cgine\");
+                fileDirInfo.Attributes |= FileAttributes.Hidden;
 
             }
             catch (Exception ex)
             {
-
+                Debug.WriteLine(ex.Message);
             }
 
             return ProjectPath;
