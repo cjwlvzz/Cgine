@@ -188,14 +188,15 @@ namespace CgineEditor.GameProject
 
                 var project = new Project(ProjectName, path);
                 Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
+                return path;
 
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                return string.Empty;
             }
 
-            return ProjectPath;
         }
 
         public NewProject()
