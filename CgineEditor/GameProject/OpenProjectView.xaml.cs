@@ -22,5 +22,30 @@ namespace CgineEditor.GameProject
         {
             InitializeComponent();
         }
+
+        private void OnOpen_Button_Clicked(object sender, RoutedEventArgs args)
+        {
+            OpenSelectedProject();
+        }
+
+        private void OnListBoxItem_Mouse_DoubleClick(object sender,RoutedEventArgs args)
+        {
+
+        }
+
+        private void OpenSelectedProject()
+        {
+            var project = OpenProject.Open(projectsListBox.SelectedItem as ProjectData);
+            bool dialogResult = false;
+            var win = Window.GetWindow(this);
+            if (project != null)
+            {
+                dialogResult = true;
+            }
+
+            win.DialogResult = dialogResult;
+            win.Close();
+        }
+
     }
 }
