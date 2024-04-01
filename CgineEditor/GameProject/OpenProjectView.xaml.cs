@@ -30,7 +30,7 @@ namespace CgineEditor.GameProject
 
         private void OnListBoxItem_Mouse_DoubleClick(object sender,RoutedEventArgs args)
         {
-
+            OpenSelectedProject();
         }
 
         private void OpenSelectedProject()
