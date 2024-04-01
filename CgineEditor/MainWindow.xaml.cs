@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,10 @@ namespace CgineEditor
         {
             InitializeComponent();
             Loaded += OnMainWindowLoaded;
+            Closing += OnMainWindowClosing;
         }
+
+        
 
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
@@ -33,18 +37,23 @@ namespace CgineEditor
             OpenProjectBrowserDialog();
         }
 
-
+        private void OnMainWindowClosing(object sender, CancelEventArgs e)
+        {
+            Closing -= OnMainWindowClosing;
+            Project.currentProject?.Unload();
+        }
         private void OpenProjectBrowserDialog()
         {
             var projectBrowser = new ProjectBrowserDialog();
             //open the projectBrowser when the engine is started
-            if (projectBrowser.ShowDialog() == false)
+            if (projectBrowser.ShowDialog() == false || projectBrowser.DataContext ==null)
             {
                 Application.Current.Shutdown();
             }
             else
             {
-
+                Project.currentProject?.Unload();
+                DataContext = projectBrowser.DataContext;
             }
         }
 
