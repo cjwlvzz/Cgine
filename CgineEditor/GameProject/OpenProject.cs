@@ -86,7 +86,7 @@ namespace CgineEditor.GameProject
             }
             WriteProjectData();
 
-            return null;
+            return Project.Load(project.FullPath);
         }
 
        

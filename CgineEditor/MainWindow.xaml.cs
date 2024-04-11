@@ -29,8 +29,6 @@ namespace CgineEditor
             Closing += OnMainWindowClosing;
         }
 
-        
-
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnMainWindowLoaded;
