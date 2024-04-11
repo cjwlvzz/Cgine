@@ -186,7 +186,7 @@ namespace CgineEditor.GameProject
                 var projectPath = Path.GetFullPath(Path.Combine(path, $"{ProjectName}{Project.Extension}"));
                 File.WriteAllText(projectPath, projectXmlConfig);
 
-                var project = new Project(ProjectName, path);
+                var project = Serializer.FromFile<Project>(projectPath);
                 Serializer.ToFile(project, path + $"{ProjectName}" + Project.Extension);
                 return path;
 
