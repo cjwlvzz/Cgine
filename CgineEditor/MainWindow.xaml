@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CgineEditor"
         xmlns:editors="clr-namespace:CgineEditor.Editors"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="Cgine Editor" Height="900" Width="1600">
+        Title="Cgine Editor" Height="1000" Width="1900">
     <Grid>
         <editors:WorldEditorView/>
     </Grid>

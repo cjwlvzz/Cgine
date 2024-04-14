@@ -22,5 +22,10 @@ namespace CgineEditor.Editors
         {
             InitializeComponent();
         }
+
+        private void ProjectLayoutView_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

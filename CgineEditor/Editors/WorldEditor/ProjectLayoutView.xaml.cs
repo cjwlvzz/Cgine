@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CgineEditor.GameProject;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -22,5 +23,12 @@ namespace CgineEditor.Editors
         {
             InitializeComponent();
         }
+
+        private void OnAddScene_Button_Clicked(object sender, RoutedEventArgs e)
+        {
+            var vm = DataContext as Project;
+            vm.addScene("New Scene" + vm.Scenes.Count);
+        }
+
     }
 }

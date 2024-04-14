@@ -9,9 +9,7 @@
 	</Path>
 	<Scenes>
 		<Scene z:Id="i2">
-			<Name>
-				default scene
-			</Name>
+			<Name>default scene</Name>
 			<IsActive>true</IsActive>
 			<Project z:Ref="i1" />
 		</Scene>

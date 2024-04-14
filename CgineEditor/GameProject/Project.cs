@@ -47,6 +47,18 @@ namespace CgineEditor.GameProject
 
         public static Project currentProject => Application.Current.MainWindow.DataContext as Project;
 
+        public void addScene(string sceneName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
+            _scenes.Add(new Scene(this, sceneName));
+        }
+
+        public void removeScene(Scene scene)
+        {
+            Debug.Assert(_scenes.Contains(scene));
+            _scenes.Remove(scene);
+        }
+
         public void Unload()
         {
 
