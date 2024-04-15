@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 
 namespace CgineEditor.GameProject
 {
@@ -47,13 +48,23 @@ namespace CgineEditor.GameProject
 
         public static Project currentProject => Application.Current.MainWindow.DataContext as Project;
 
-        public void addScene(string sceneName)
+        public static UndoRedo UndoRedo { get; } = new UndoRedo();
+
+        public ICommand Undo { get; private set; }
+
+        public ICommand Redo { get; private set; }
+
+        public ICommand AddScene { get; private set; }
+
+        public ICommand RemoveScene { get; private set; }
+
+        private void AddSceneInternal(string sceneName)
         {
             Debug.Assert(!string.IsNullOrEmpty(sceneName.Trim()));
             _scenes.Add(new Scene(this, sceneName));
         }
 
-        public void removeScene(Scene scene)
+        private void RemoveSceneInternal(Scene scene)
         {
             Debug.Assert(_scenes.Contains(scene));
             _scenes.Remove(scene);
@@ -88,6 +99,34 @@ namespace CgineEditor.GameProject
                 OnPropertyChanged(nameof(Scenes));
             }
             ActiveScene = Scenes.FirstOrDefault(x => x.IsActive);
+
+            AddScene = new RelayCommand<object>(x =>
+            {
+                AddSceneInternal($"New Scene {_scenes.Count}");
+                var newScene = _scenes.Last();
+                var sceneIndex = _scenes.Count - 1;
+                UndoRedo.Add(new UndoRedoAction(
+                    () => RemoveSceneInternal(newScene),
+                    () => _scenes.Insert(sceneIndex,newScene),
+                    $"Add{newScene.Name}"
+                    ));
+            });
+
+            RemoveScene = new RelayCommand<Scene>(x =>
+            {
+                var sceneIndex = _scenes.IndexOf(x);
+                RemoveSceneInternal(x);
+
+                UndoRedo.Add(new UndoRedoAction(
+                    () => _scenes.Insert(sceneIndex,x),
+                    () => RemoveSceneInternal(x),
+                    $"Remove {x.Name}" ));
+
+            }, x=> !x.IsActive);
+
+            Undo = new RelayCommand<object>(x => UndoRedo.Undo());
+            Redo = new RelayCommand<object>(x => UndoRedo.Redo());
+
         }
 
         public Project(string name , string path)

@@ -1,5 +1,4 @@
-﻿using CgineEditor.GameProject;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -12,18 +11,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CgineEditor.Editors
+namespace CgineEditor.Utils
 {
     /// <summary>
-    /// ProjectLayoutView.xaml 的交互逻辑
+    /// Interaction logic for UndoRedoView.xaml
     /// </summary>
-    public partial class ProjectLayoutView : UserControl
+    public partial class UndoRedoView : UserControl
     {
-        public ProjectLayoutView()
+        public UndoRedoView()
         {
             InitializeComponent();
         }
-
-
     }
 }
