@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CgineEditor.GameProject;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,11 +30,7 @@ namespace CgineEditor.Editors
         {
             Loaded -= OnWorldEditorViewLoaded;
             Focus();
-        }
-
-        private void ProjectLayoutView_Loaded(object sender, RoutedEventArgs e)
-        {
-
+            ((INotifyCollectionChanged)Project.UndoRedo.UndoList).CollectionChanged += (s, e) => Focus();
         }
     }
 }
