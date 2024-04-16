@@ -33,6 +33,11 @@ namespace CgineEditor.GameProject
             OpenSelectedProject();
         }
 
+        private void OnExit_Button_Clicked(object sender, RoutedEventArgs args)
+        {
+            Application.Current.Shutdown();
+        }
+
         private void OnListBoxItem_Mouse_DoubleClick(object sender,RoutedEventArgs args)
         {
             OpenSelectedProject();

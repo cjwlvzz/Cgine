@@ -21,6 +21,13 @@ namespace CgineEditor.Editors
         public WorldEditorView()
         {
             InitializeComponent();
+            Loaded += OnWorldEditorViewLoaded;
+        }
+
+        private void OnWorldEditorViewLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnWorldEditorViewLoaded;
+            Focus();
         }
 
         private void ProjectLayoutView_Loaded(object sender, RoutedEventArgs e)
