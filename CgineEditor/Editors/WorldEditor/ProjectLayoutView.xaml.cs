@@ -1,4 +1,5 @@
-﻿using CgineEditor.GameProject;
+﻿using CgineEditor.ECS;
+using CgineEditor.GameProject;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,11 @@ namespace CgineEditor.Editors
             InitializeComponent();
         }
 
-
+        private void OnAddEntity_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var vm = btn.DataContext as Scene;
+            vm.AddEntityCommand.Execute(new Entity(vm) { Name = "Empty Entity"});
+        }
     }
 }

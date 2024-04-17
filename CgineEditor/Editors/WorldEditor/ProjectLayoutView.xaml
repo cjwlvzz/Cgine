@@ -29,10 +29,20 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Name}"/>
                                         <Button Content="Remove" Command="{Binding DataContext.RemoveSceneCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding }" Margin="20,0" Focusable="False"/>
+                                        <Button Content="+" Command="{Binding AddEntityCommand}" IsEnabled="{Binding IsActive}" Click="OnAddEntity_Button_Click"/>
                                     </StackPanel>
                                 </Grid>
                             </Expander.Header>
-                            <Border Background="Blue" Height="100"/>
+                            <ListBox ItemsSource="{Binding Entities}" IsEnabled="{Binding IsActive}" SelectionMode="Extended">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <Button Content="Remove" Command="{Binding parentScene.RemoveEntityCommand}" CommandParameter="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Expander>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
