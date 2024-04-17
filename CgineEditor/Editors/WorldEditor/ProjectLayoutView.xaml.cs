@@ -31,5 +31,11 @@ namespace CgineEditor.Editors
             var vm = btn.DataContext as Scene;
             vm.AddEntityCommand.Execute(new Entity(vm) { Name = "Empty Entity"});
         }
+
+        private void OnGameEntites_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var entity = (sender as ListBox).SelectedItems[0];
+            GameEntityView.instance.DataContext = entity;
+        }
     }
 }

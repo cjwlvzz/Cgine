@@ -5,6 +5,7 @@
 	<Path>{1}</Path>
 	<Scenes>
 		<Scene z:Id="i2">
+			<Entities xmlns:a="http://schemas.datacontract.org/2004/07/CgineEditor.ECS"/>
 			<IsActive>true</IsActive>
 			<Name>default scene</Name>
 			<Project z:Ref="i1"/>

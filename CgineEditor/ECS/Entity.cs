@@ -10,6 +10,7 @@ using System.Text;
 namespace CgineEditor.ECS
 {
     [DataContract]
+    [KnownType(typeof(TransformComponent))]
     public class Entity : ViewModelBase
     {
         private string _name;
@@ -35,10 +36,21 @@ namespace CgineEditor.ECS
 
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
+        [OnDeserialized]
+        void OnDeserialized(StreamingContext context)
+        {
+            if(_components != null)
+            {
+                Components = new ReadOnlyObservableCollection<Component>(_components);
+                OnPropertyChanged(nameof(Components));
+            }
+        }
+
         public Entity(Scene scene)
         {
             Debug.Assert(scene != null);
             parentScene = scene;
+            _components.Add(new TransformComponent(this));
         }
 
     }

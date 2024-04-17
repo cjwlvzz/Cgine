@@ -49,7 +49,7 @@ namespace CgineEditor.GameProject
         }
 
         [DataMember(Name = nameof(Entities))]
-        private readonly ObservableCollection<Entity> _entities = new ObservableCollection<Entity>();
+        private readonly  ObservableCollection<Entity> _entities = new ObservableCollection<Entity>();
 
         public ReadOnlyObservableCollection<Entity> Entities { get; private set; }
 

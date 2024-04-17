@@ -13,7 +13,7 @@ namespace CgineEditor.Utils
         {
             try
             {
-                using var fs = new FileStream(path, FileMode.Create);
+                using var fs = new FileStream(path, FileMode.Create); 
                 var serializer = new DataContractSerializer(typeof(T));
                 serializer.WriteObject(fs,instance);
             }
