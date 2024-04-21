@@ -16,16 +16,16 @@ namespace CgineEditor.Editors
     /// <summary>
     /// Interaction logic for GameEntityView.xaml
     /// </summary>
-    public partial class GameEntityView : UserControl
+    public partial class EntityView : UserControl
     {
 
-        static public GameEntityView instance { get; private set; }
+        static public EntityView Instance { get; private set; }
 
-        public GameEntityView()
+        public EntityView()
         {
             InitializeComponent();
             DataContext = null;
-            instance = this;
+            Instance = this;
         }
     }
 }

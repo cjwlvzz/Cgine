@@ -1,7 +1,9 @@
 ﻿using CgineEditor.ECS;
 using CgineEditor.GameProject;
+using CgineEditor.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,8 +36,28 @@ namespace CgineEditor.Editors
 
         private void OnGameEntites_ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var entity = (sender as ListBox).SelectedItems[0];
-            GameEntityView.instance.DataContext = entity;
+            EntityView.Instance.DataContext = null;
+            var listBox = sender as ListBox;
+            if (e.AddedItems.Count > 0)
+            {
+               EntityView.Instance.DataContext = listBox.SelectedItems[0];
+            }
+
+            var newSelection = listBox.SelectedItems.Cast<Entity>().ToList();
+            var previousSelection = newSelection.Except(e.AddedItems.Cast<Entity>()).Concat ( e.RemovedItems.Cast<Entity>()).ToList();
+
+            Project.UndoRedo.Add(new UndoRedoAction(
+                () => {
+                    listBox.UnselectAll();
+                    previousSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
+                },
+                () => {
+                    listBox.UnselectAll();
+                    newSelection.ForEach(x => (listBox.ItemContainerGenerator.ContainerFromItem(x) as ListBoxItem).IsSelected = true);
+                },
+                "Selection Changed"
+                ));
+
         }
     }
 }
