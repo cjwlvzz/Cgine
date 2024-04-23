@@ -13,6 +13,22 @@ namespace CgineEditor.ECS
     [KnownType(typeof(TransformComponent))]
     public class Entity : ViewModelBase
     {
+
+        private bool _isEnabled = true;
+        [DataMember]
+        public bool IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    OnPropertyChanged(nameof(IsEnabled));
+                }
+            }
+        }
+
         private string _name;
         [DataMember]
         public string Name
@@ -51,6 +67,7 @@ namespace CgineEditor.ECS
             Debug.Assert(scene != null);
             parentScene = scene;
             _components.Add(new TransformComponent(this));
+            OnDeserialized(new StreamingContext());
         }
 
     }
