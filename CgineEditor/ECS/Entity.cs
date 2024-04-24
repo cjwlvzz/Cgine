@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Windows.Input;
 
 namespace CgineEditor.ECS
 {
@@ -52,6 +53,10 @@ namespace CgineEditor.ECS
 
         public ReadOnlyObservableCollection<Component> Components { get; private set; }
 
+        public ICommand RenameCommand { set; private get; }
+
+        public ICommand EnableCommand { set; private get; }
+
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
@@ -60,6 +65,17 @@ namespace CgineEditor.ECS
                 Components = new ReadOnlyObservableCollection<Component>(_components);
                 OnPropertyChanged(nameof(Components));
             }
+
+            RenameCommand = new RelayCommand<string>(x =>
+            {
+                var oldName = _name;
+                Name = x;
+
+                Project.UndoRedo.Add(new UndoRedoAction(nameof(Name)));
+
+            });
+            
+
         }
 
         public Entity(Scene scene)

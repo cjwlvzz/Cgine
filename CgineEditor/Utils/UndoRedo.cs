@@ -38,6 +38,11 @@ namespace CgineEditor.Utils
             _redoAction = redo;
         }
 
+        public UndoRedoAction(string propertyName, object instance,object undoValue,object redoValue,string name)
+        {
+
+        }
+
     }
 
     public class UndoRedo
