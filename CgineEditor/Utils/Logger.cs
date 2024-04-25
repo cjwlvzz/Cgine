@@ -17,7 +17,7 @@ namespace CgineEditor.Utils
     {
         Info = 0x01,
         Warning = 0x02,
-        Error = 0x03,
+        Error = 0x04,
     }
 
     class LogMessage

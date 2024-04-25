@@ -21,6 +21,30 @@ namespace CgineEditor.Utils
         public LoggerView()
         {
             InitializeComponent();
+
+            Loaded += (s, e) =>
+            {
+                Logger.Log(MessageType.Error, "error log");
+                Logger.Log(MessageType.Info, "error log");
+                Logger.Log(MessageType.Warning, "error log");
+
+
+            };
+
+        }
+
+        private void OnClear_Button_Click(object sender, RoutedEventArgs e)
+        {
+            Logger.Clear();
+        }
+
+        private void OnMessageFilter_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var filter = 0x0;
+            if (ToggleInfo.IsChecked == true) filter |= (int)MessageType.Info;
+            if (ToggleWarnings.IsChecked == true) filter |= (int)MessageType.Warning;
+            if (ToggleErrors.IsChecked == true) filter |= (int)MessageType.Error;
+            Logger.SetMessageFilter(filter);
         }
     }
 }
