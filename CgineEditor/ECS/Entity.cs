@@ -71,9 +71,9 @@ namespace CgineEditor.ECS
                 var oldName = _name;
                 Name = x;
 
-                Project.UndoRedo.Add(new UndoRedoAction(nameof(Name)));
+                Project.UndoRedo.Add(new UndoRedoAction(nameof(Name),this,oldName,x,$"Rename Entity'{oldName}' to '{x}'"));
 
-            });
+            },x => x != _name);
             
 
         }
