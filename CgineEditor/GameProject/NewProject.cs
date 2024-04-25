@@ -6,6 +6,8 @@ using System.Linq;
 using System.Runtime.Serialization;
 using CgineEditor.Utils;
 using System.Collections.ObjectModel;
+using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace CgineEditor.GameProject
 {
@@ -192,6 +194,7 @@ namespace CgineEditor.GameProject
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                Logger.Log(MessageType.Error,$"Failed to create {template.ProjectType}");
                 return string.Empty;
             }
 
@@ -230,7 +233,7 @@ namespace CgineEditor.GameProject
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                //TODO :log error in engine editor
+                Logger.Log(MessageType.Error, $"Failed to read project templates");
             }
         }
 

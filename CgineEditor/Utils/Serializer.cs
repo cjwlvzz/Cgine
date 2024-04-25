@@ -20,7 +20,8 @@ namespace CgineEditor.Utils
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                // TODO: log error in engine editor
+                Logger.Log(MessageType.Error, $"Failed to serialize {instance} to {path}");
+                throw;
             }
         }
 
@@ -36,8 +37,8 @@ namespace CgineEditor.Utils
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                // TODO: log error in engine editor
-                return default(T);
+                Logger.Log(MessageType.Error,$"Failed to deserialize {path}");
+                throw;
             }
         }
     }
