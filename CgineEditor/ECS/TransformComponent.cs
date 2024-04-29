@@ -7,7 +7,7 @@ using System.Text;
 namespace CgineEditor.ECS
 {
     [DataContract]
-    public class TransformComponent : Component
+    class TransformComponent : ComponentBase
     {
 
         private Vector3 _position;

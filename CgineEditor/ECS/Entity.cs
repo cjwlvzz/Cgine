@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ namespace CgineEditor.ECS
 {
     [DataContract]
     [KnownType(typeof(TransformComponent))]
-    public class Entity : ViewModelBase
+    class Entity : ViewModelBase
     {
 
         private bool _isEnabled = true;
@@ -49,9 +50,9 @@ namespace CgineEditor.ECS
         public Scene parentScene { get; private set; }
 
         [DataMember(Name = nameof(Components))]
-        private readonly ObservableCollection<Component> _components = new ObservableCollection<Component>();
+        private readonly ObservableCollection<ComponentBase> _components = new ObservableCollection<ComponentBase>();
 
-        public ReadOnlyObservableCollection<Component> Components { get; private set; }
+        public ReadOnlyObservableCollection<ComponentBase> Components { get; private set; }
 
         public ICommand RenameCommand { set; private get; }
 
@@ -62,7 +63,7 @@ namespace CgineEditor.ECS
         {
             if(_components != null)
             {
-                Components = new ReadOnlyObservableCollection<Component>(_components);
+                Components = new ReadOnlyObservableCollection<ComponentBase>(_components);
                 OnPropertyChanged(nameof(Components));
             }
 
@@ -91,6 +92,62 @@ namespace CgineEditor.ECS
             parentScene = scene;
             _components.Add(new TransformComponent(this));
             OnDeserialized(new StreamingContext());
+        }
+
+        abstract class MSEntityBase : ViewModelBase
+        {
+            private bool? _isEnabled = true;
+            [DataMember]
+            public bool? IsEnabled
+            {
+                get => _isEnabled;
+                set
+                {
+                    if (_isEnabled != value)
+                    {
+                        _isEnabled = value;
+                        OnPropertyChanged(nameof(IsEnabled));
+                    }
+                }
+            }
+
+            private string _name;
+            [DataMember]
+            public string Name
+            {
+                get => _name;
+                set
+                {
+                    if (value != _name)
+                    {
+                        _name = value;
+                        OnPropertyChanged(nameof(Name));
+                    }
+                }
+            }
+
+            private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
+            public ReadOnlyObservableCollection<IMSComponent> Components { get; }
+
+            public List<Entity> SelectedEntities { get; }
+
+            public MSEntityBase(List<Entity> entities)
+            {
+                Debug.Assert(entities?.Any() == true);
+                Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
+                SelectedEntities = entities;
+                PropertyChanged += (s, e) => { UpdateEntities(e.PropertyName); };
+            }
+
+            protected virtual void UpdateEntities(string propertyName)
+            {
+                
+            }
+        }
+
+        class MSEntity : MSEntityBase
+        {
+
         }
 
     }

@@ -6,16 +6,20 @@ using System.Text;
 
 namespace CgineEditor.ECS
 {
+    interface IMSComponent { }
     [DataContract]
-    public class Component : ViewModelBase
+    abstract class ComponentBase : ViewModelBase
     {
         public Entity Owner { get; private set; }
 
-        public Component(Entity entity)
+        public ComponentBase(Entity entity)
         {
             Debug.Assert(entity != null);
             Owner = entity;
         }
 
     }
+
+    abstract class MSComponentBase<T> : ViewModelBase, IMSComponent where T : ComponentBase { }
+
 }
