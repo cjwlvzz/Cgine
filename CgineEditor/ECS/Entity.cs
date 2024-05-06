@@ -61,7 +61,7 @@ namespace CgineEditor.ECS
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
-            if(_components != null)
+            if (_components != null)
             {
                 Components = new ReadOnlyObservableCollection<ComponentBase>(_components);
                 OnPropertyChanged(nameof(Components));
@@ -72,9 +72,9 @@ namespace CgineEditor.ECS
                 var oldName = _name;
                 Name = x;
 
-                Project.UndoRedo.Add(new UndoRedoAction(nameof(Name),this,oldName,x,$"Rename Entity'{oldName}' to '{x}'"));
+                Project.UndoRedo.Add(new UndoRedoAction(nameof(Name), this, oldName, x, $"Rename Entity'{oldName}' to '{x}'"));
 
-            },x => x != _name);
+            }, x => x != _name);
 
             IsEnabledCommand = new RelayCommand<bool>(x =>
             {
@@ -94,61 +94,104 @@ namespace CgineEditor.ECS
             OnDeserialized(new StreamingContext());
         }
 
-        abstract class MSEntityBase : ViewModelBase
-        {
-            private bool? _isEnabled = true;
-            [DataMember]
-            public bool? IsEnabled
-            {
-                get => _isEnabled;
-                set
-                {
-                    if (_isEnabled != value)
-                    {
-                        _isEnabled = value;
-                        OnPropertyChanged(nameof(IsEnabled));
-                    }
-                }
-            }
 
-            private string _name;
-            [DataMember]
-            public string Name
-            {
-                get => _name;
-                set
-                {
-                    if (value != _name)
-                    {
-                        _name = value;
-                        OnPropertyChanged(nameof(Name));
-                    }
-                }
-            }
 
-            private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
-            public ReadOnlyObservableCollection<IMSComponent> Components { get; }
-
-            public List<Entity> SelectedEntities { get; }
-
-            public MSEntityBase(List<Entity> entities)
-            {
-                Debug.Assert(entities?.Any() == true);
-                Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
-                SelectedEntities = entities;
-                PropertyChanged += (s, e) => { UpdateEntities(e.PropertyName); };
-            }
-
-            protected virtual void UpdateEntities(string propertyName)
-            {
-                
-            }
-        }
-
-        class MSEntity : MSEntityBase
-        {
-
-        }
 
     }
+    abstract class MSEntityBase : ViewModelBase
+    {
+        private bool? _isEnabled = true;
+        [DataMember]
+        public bool? IsEnabled
+        {
+            get => _isEnabled;
+            set
+            {
+                if (_isEnabled != value)
+                {
+                    _isEnabled = value;
+                    OnPropertyChanged(nameof(IsEnabled));
+                }
+            }
+        }
+
+        private string _name;
+        [DataMember]
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value != _name)
+                {
+                    _name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+        }
+
+        private readonly ObservableCollection<IMSComponent> _components = new ObservableCollection<IMSComponent>();
+        public ReadOnlyObservableCollection<IMSComponent> Components { get; }
+
+        public List<Entity> SelectedEntities { get; }
+
+        protected virtual bool UpdateEntities(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case nameof(IsEnabled): SelectedEntities.ForEach(x => x.IsEnabled = IsEnabled.Value); return true;
+                case nameof(Name): SelectedEntities.ForEach(x => x.Name = Name); return true;
+            }
+            return false;
+        }
+
+        protected virtual bool UpdateMSEntities()
+        {
+            IsEnabled = GetMixedValue(SelectedEntities,new Func<Entity,bool>(x=>x.IsEnabled));
+            Name = GetMixedValue(SelectedEntities,new Func<Entity,string>(x=>x.Name));
+            return false;
+        }
+
+        private string? GetMixedValue(List<Entity> entities, Func<Entity, string> func)
+        {
+            return "";
+        }
+
+        private bool? GetMixedValue(List<Entity> entities, Func<Entity, bool> func)
+        {
+            return null;
+        }
+
+        private float? GetMixedValue(List<Entity> entities, Func<Entity, float> getProperty)
+        {
+            var value = getProperty(entities.First());
+            foreach (var entity in entities.Skip(1))
+            {
+                if(value != getProperty(entity))
+                {
+                    return null;
+                }
+            }
+            return value;
+        }
+
+        public void Refresh()
+        {
+            UpdateMSEntities();
+        }
+
+        public MSEntityBase(List<Entity> entities)
+        {
+            Debug.Assert(entities?.Any() == true);
+            Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
+            SelectedEntities = entities;
+            PropertyChanged += (s, e) => { UpdateEntities(e.PropertyName); };
+        }
+    }
+
+    //class MSEntity : MSEntityBase
+    //{
+
+    //}
+
 }

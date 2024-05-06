@@ -13,7 +13,7 @@ using System.Windows.Input;
 namespace CgineEditor.GameProject
 {
     [DataContract(Name = "Game")]
-    public class Project : ViewModelBase
+    class Project : ViewModelBase
     {
         [DataMember]
         public string Name { get; private set; } = "New Project";
