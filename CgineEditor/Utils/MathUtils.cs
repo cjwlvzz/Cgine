@@ -8,7 +8,13 @@ namespace CgineEditor.Utils
     {
         public static float Eplison => 0.00001f;
 
-        public static bool IsTheSameAs(this float? value,float? other)
+        //extension method,adding new method to a class without modify the class
+        public static bool IsTheSameAs(this float value, float other)
+        {
+            return Math.Abs(value - other) < Eplison;
+        }
+
+        public static bool isTheSameAs(this float? value, float? other)
         {
             if (!value.HasValue || !other.HasValue) return false;
             return Math.Abs(value.Value - other.Value) < Eplison;

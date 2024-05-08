@@ -38,11 +38,7 @@ namespace CgineEditor.Editors
         {
             EntityView.Instance.DataContext = null;
             var listBox = sender as ListBox;
-            if (e.AddedItems.Count > 0)
-            {
-               EntityView.Instance.DataContext = listBox.SelectedItems[0];
-            }
-
+            
             var newSelection = listBox.SelectedItems.Cast<Entity>().ToList();
             var previousSelection = newSelection.Except(e.AddedItems.Cast<Entity>()).Concat ( e.RemovedItems.Cast<Entity>()).ToList();
 
@@ -57,7 +53,12 @@ namespace CgineEditor.Editors
                 },
                 "Selection Changed"
                 ));
-
+            MSEntity msEntity = null;
+            if(newSelection.Any())
+            {
+                msEntity = new MSEntity(newSelection);
+            }
+            EntityView.Instance.DataContext = msEntity;
         }
     }
 }

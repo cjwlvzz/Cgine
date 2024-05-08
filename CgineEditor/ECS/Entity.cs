@@ -100,6 +100,8 @@ namespace CgineEditor.ECS
     }
     abstract class MSEntityBase : ViewModelBase
     {
+        //whether the selected entities can be update
+        private bool _enableUpdates = true;
         private bool? _isEnabled = true;
         [DataMember]
         public bool? IsEnabled
@@ -135,6 +137,47 @@ namespace CgineEditor.ECS
 
         public List<Entity> SelectedEntities { get; }
 
+        
+
+        private string? GetMixedValue(List<Entity> entities, Func<Entity, string> getProperty)
+        {
+            var value = getProperty(entities.First());
+            foreach (var entity in entities.Skip(1))
+            {
+                if (value != getProperty(entity))
+                {
+                    return null;
+                }
+            }
+            return value;
+        }
+
+        private bool? GetMixedValue(List<Entity> entities, Func<Entity, bool> getProperty)
+        {
+            var value = getProperty(entities.First());
+            foreach (var entity in entities.Skip(1))
+            {
+                if (value != getProperty(entity))
+                {
+                    return null;
+                }
+            }
+            return value;
+        }
+
+        private float? GetMixedValue(List<Entity> entities, Func<Entity, float> getProperty)
+        {
+            var value = getProperty(entities.First());
+            foreach (var entity in entities.Skip(1))
+            {
+                if (value.IsTheSameAs(getProperty(entity)))
+                {
+                    return null;
+                }
+            }
+            return value;
+        }
+
         protected virtual bool UpdateEntities(string propertyName)
         {
             switch (propertyName)
@@ -147,37 +190,16 @@ namespace CgineEditor.ECS
 
         protected virtual bool UpdateMSEntities()
         {
-            IsEnabled = GetMixedValue(SelectedEntities,new Func<Entity,bool>(x=>x.IsEnabled));
-            Name = GetMixedValue(SelectedEntities,new Func<Entity,string>(x=>x.Name));
+            IsEnabled = GetMixedValue(SelectedEntities, new Func<Entity, bool>(x => x.IsEnabled));
+            Name = GetMixedValue(SelectedEntities, new Func<Entity, string>(x => x.Name));
             return false;
-        }
-
-        private string? GetMixedValue(List<Entity> entities, Func<Entity, string> func)
-        {
-            return "";
-        }
-
-        private bool? GetMixedValue(List<Entity> entities, Func<Entity, bool> func)
-        {
-            return null;
-        }
-
-        private float? GetMixedValue(List<Entity> entities, Func<Entity, float> getProperty)
-        {
-            var value = getProperty(entities.First());
-            foreach (var entity in entities.Skip(1))
-            {
-                if(value != getProperty(entity))
-                {
-                    return null;
-                }
-            }
-            return value;
         }
 
         public void Refresh()
         {
+            _enableUpdates = false;
             UpdateMSEntities();
+            _enableUpdates = true;
         }
 
         public MSEntityBase(List<Entity> entities)
@@ -185,13 +207,16 @@ namespace CgineEditor.ECS
             Debug.Assert(entities?.Any() == true);
             Components = new ReadOnlyObservableCollection<IMSComponent>(_components);
             SelectedEntities = entities;
-            PropertyChanged += (s, e) => { UpdateEntities(e.PropertyName); };
+            PropertyChanged += (s, e) => { if (_enableUpdates) UpdateEntities(e.PropertyName); };
         }
     }
 
-    //class MSEntity : MSEntityBase
-    //{
-
-    //}
+    class MSEntity : MSEntityBase
+    {
+        public MSEntity(List<Entity> entities) : base(entities)
+        {
+            Refresh();
+        }
+    }
 
 }
