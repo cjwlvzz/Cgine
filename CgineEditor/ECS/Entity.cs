@@ -54,10 +54,6 @@ namespace CgineEditor.ECS
 
         public ReadOnlyObservableCollection<ComponentBase> Components { get; private set; }
 
-        public ICommand RenameCommand { set; private get; }
-
-        public ICommand IsEnabledCommand { set; private get; }
-
         [OnDeserialized]
         void OnDeserialized(StreamingContext context)
         {
@@ -66,24 +62,6 @@ namespace CgineEditor.ECS
                 Components = new ReadOnlyObservableCollection<ComponentBase>(_components);
                 OnPropertyChanged(nameof(Components));
             }
-
-            RenameCommand = new RelayCommand<string>(x =>
-            {
-                var oldName = _name;
-                Name = x;
-
-                Project.UndoRedo.Add(new UndoRedoAction(nameof(Name), this, oldName, x, $"Rename Entity'{oldName}' to '{x}'"));
-
-            }, x => x != _name);
-
-            IsEnabledCommand = new RelayCommand<bool>(x =>
-            {
-                var oldValue = _isEnabled;
-                _isEnabled = x;
-
-                Project.UndoRedo.Add(new UndoRedoAction(nameof(IsEnabled), this, oldValue, x, x ? $"Enable {Name}" : $"Disable {Name}"));
-
-            });
         }
 
         public Entity(Scene scene)
