@@ -1,6 +1,5 @@
 #pragma once
-#include "PrimitiveTypes.h"
-#include <typeinfo>
+#include "CommonHeaders.h"
 
 namespace Cgine::id
 {
@@ -16,6 +15,33 @@ namespace Cgine::id
 
 	constexpr id_type id_mask{ id_type{ -1 } };
 
+	//select a type 
 	using generation_type = std::conditional_t<generation_bits <= 16, std::conditional_t<generation_bits <= 8, uint8, uint16>, uint32>;
+
+	static_assert(sizeof(generation_type) * 8 >= generation_bits);
+
+	static_assert((sizeof(id_type) - sizeof(generation_type)) > 0);
+
+	inline bool isValid(id_type id)
+	{
+		return id != id_mask;
+	}
+
+	inline id_type index(id_type id)
+	{
+		return id & index_mask;
+	}
+
+	inline id_type generation(id_type id)
+	{
+		return (id >> index_bits) & generation_mask;
+	}
+
+	inline id_type new_generation(id_type id)
+	{
+		const id_type generation{ id::generation(id) + 1 };
+		assert(generation < 255);
+		return index(id) | (generation << index_bits);
+	}
 
 }
