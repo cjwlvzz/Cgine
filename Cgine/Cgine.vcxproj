@@ -16,6 +16,11 @@
     <ClInclude Include="Components\Entity.h" />
     <ClInclude Include="Common\Id.h" />
     <ClInclude Include="Common\PrimitiveTypes.h" />
+    <ClInclude Include="Components\TransformComponent.h" />
+    <ClInclude Include="Utils\Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Components\Entity.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -11,6 +11,8 @@ using int16 = int16_t;
 using int32 = int32_t;
 using int64 = int64_t;
 
+using f32 = float;
+
 //Invalid identifier
 constexpr uint64 uint64_invalid_id{ 0xffff'ffff'ffff'ffffui64 };
 constexpr uint32 uint32_invalid_id{ 0xffff'ffffui32 };

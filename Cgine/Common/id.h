@@ -14,7 +14,7 @@ namespace Cgine::id
 
 	constexpr id_type generation_mask{ (id_type{1} << generation_bits) - 1 };
 
-	constexpr id_type id_mask{ id_type{ -1 } };
+	constexpr id_type id_mask{ static_cast<id_type>(-1) };
 
 	//select a type 
 	using generation_type = std::conditional_t<generation_bits <= 16, std::conditional_t<generation_bits <= 8, uint8, uint16>, uint32>;
